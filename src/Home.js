@@ -1,31 +1,14 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
 import BlogList from "./BlogList";
+import useFetch from "./useFetch";
 
 const Home = () => {
-    const [blogs, setBlogs] = useState(null);
-
-    const [name, setName] = useState("mario");
-
-    const handleDelete = (id) => {
-        const newBlogs = blogs.filter(blog => blog.id !== id);
-        setBlogs(newBlogs);
-    };
-
-    useEffect(() => {
-        fetch('https://github.com/aaronwitherspoon/demo/blob/master/db2.json')
-            .then(res => {
-                return res.json();
-            })
-            .then((data) => {
-                setBlogs(data);
-                console.log(data);
-            })
-    }, []);
-
+    const {data: blogs, isPending, error} = useFetch('https://my-json-server.typicode.com/aaronwitherspoon/demo/blogs');
+    
     return ( 
         <div className="home">
-            
+            {error && <div>{error}</div>}
+            {isPending && <div>Loading...</div>}
+            {blogs && <BlogList blogs={blogs} title="All blogs" />}
         </div>
      );
 }
